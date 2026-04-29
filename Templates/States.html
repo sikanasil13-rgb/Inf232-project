@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Statistiques</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+
+    <div class="card shadow p-4">
+
+        <h2 class="text-center mb-4">📈 Analyse des données</h2>
+
+        <div class="row text-center">
+            <div class="col">
+                <h5>Moyenne sommeil</h5>
+                <p class="fw-bold">{{ stats.moy_sommeil }}</p>
+            </div>
+
+            <div class="col">
+                <h5>Moyenne étude</h5>
+                <p class="fw-bold">{{ stats.moy_etude }}</p>
+            </div>
+        </div>
+
+        <hr>
+
+        <canvas id="chart1"></canvas>
+
+        <br><br>
+
+        <canvas id="chart2"></canvas>
+
+        <br>
+
+        <a href="/" class="btn btn-secondary w-100">Retour</a>
+
+    </div>
+
+</div>
+
+<script>
+const sommeil = {{ sommeil }};
+const etude = {{ etude }};
+
+// Graphique 1 : Comparaison
+new Chart(document.getElementById("chart1"), {
+    type: "bar",
+    data: {
+        labels: sommeil.map((_, i) => "User " + (i+1)),
+        datasets: [
+            {
+                label: "Sommeil",
+                data: sommeil,
+                backgroundColor: "blue"
+            },
+            {
+                label: "Etude",
+                data: etude,
+                backgroundColor: "green"
+            }
+        ]
+    }
+});
+
+// Graphique 2 : Moyennes
+new Chart(document.getElementById("chart2"), {
+    type: "pie",
+    data: {
+        labels: ["Sommeil", "Etude"],
+        datasets: [{
+            data: [{{ stats.moy_sommeil }}, {{ stats.moy_etude }}],
+            backgroundColor: ["blue", "green"]
+        }]
+    }
+});
+</script>
+
+</body>
+</html>
