@@ -15,12 +15,15 @@ def init_db():
     ''')
     conn.close()
 
+# Appel direct pour Render
+init_db()
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        age = request.form["age"]
-        sommeil = request.form["sommeil"]
-        etude = request.form["etude"]
+        age = int(request.form["age"])
+        sommeil = int(request.form["sommeil"])
+        etude = int(request.form["etude"])
 
         conn = sqlite3.connect('data.db')
         conn.execute("INSERT INTO students (age, sommeil, etude) VALUES (?, ?, ?)",
@@ -35,7 +38,6 @@ def index():
 @app.route("/stats")
 def stats():
     conn = sqlite3.connect('data.db')
-
     data = conn.execute("SELECT sommeil, etude FROM students").fetchall()
 
     if len(data) == 0:
@@ -54,12 +56,5 @@ def stats():
     }
 
     conn.close()
-
-    return render_template("stats.html",
-                           stats=stats,
-                           sommeil=sommeil_vals,
-                           etude=etude_vals)
-
-if __name__ == "__main__":
-    init_db()
-    app.run()
+    return render_template("stats.html", stats=stats,
+                           sommeil=sommeil_vals, etude=etude_vals)
